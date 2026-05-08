@@ -1,0 +1,28 @@
+---
+/**
+ * Custom image handler for Astro Content `<Content components={{ img: Img }} />`.
+ * Videos embedded via markdown image syntax (![alt](file.mp4)) are rendered
+ * as <video> elements; everything else is a plain <img>.
+ */
+interface Props {
+  src: string
+  alt?: string
+}
+
+const { src, alt } = Astro.props
+const isVideo = /\.(mov|mp4|webm|ogg)$/i.test(src)
+---
+{isVideo ? (
+  <video src={src} controls playsinline loop muted class="prose-video" />
+) : (
+  <img src={src} alt={alt} class="prose-img" />
+)}
+
+<style>
+.prose-video,
+.prose-img {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+</style>

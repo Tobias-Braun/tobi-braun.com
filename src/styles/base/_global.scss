@@ -1,0 +1,36 @@
+@use 'abstracts' as *;
+
+@view-transition {
+  navigation: auto;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  // Reserves scrollbar space at all times — prevents layout shift when
+  // content height changes and the scrollbar appears or disappears.
+  scrollbar-gutter: stable;
+}
+
+body {
+  @extend %body-md;
+  background: var(--surface);
+  color: var(--on-surface);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+// Global focus ring (a11y)
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-size: 1.25em;
+  line-height: 1;
+  vertical-align: middle;
+}

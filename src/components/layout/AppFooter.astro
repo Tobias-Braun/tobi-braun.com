@@ -1,0 +1,110 @@
+---
+const year = new Date().getFullYear()
+
+const socials = [
+  { href: '#', label: 'GitHub' },
+  { href: '#', label: 'LinkedIn' },
+]
+
+const legal = [
+  { href: '/impressum', label: 'Impressum' },
+  { href: '/datenschutz', label: 'Datenschutz' },
+]
+---
+<footer class="footer">
+  <div class="footer__inner">
+    <span class="footer__logo">Tobias Braun</span>
+    <nav class="footer__links" aria-label="Soziale Profile">
+      {socials.map(s => (
+        <a href={s.href} class="footer__link">{s.label}</a>
+      ))}
+    </nav>
+    <div class="footer__bottom">
+      <span class="footer__copy">© {year} Tobias Braun</span>
+      <nav class="footer__legal" aria-label="Rechtliche Hinweise">
+        {legal.map(l => (
+          <a href={l.href} class="footer__link footer__link--legal">{l.label}</a>
+        ))}
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<style lang="scss">
+@use 'abstracts' as *;
+
+.footer {
+  background: var(--surface-container-low);
+  border-top: 1px solid var(--surface-container-high);
+  margin-top: var(--space-2xl);
+}
+
+.footer__inner {
+  @include container;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding-block: var(--space-lg);
+  text-align: center;
+
+  @include md {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+.footer__logo {
+  font-family: 'Allura', cursive;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--on-surface);
+  line-height: 1;
+}
+
+.footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-lg);
+}
+
+.footer__link {
+  @extend %body-md;
+  font-size: 14px;
+  color: var(--on-surface-variant);
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.footer__bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+
+  @include md {
+    align-items: flex-end;
+  }
+}
+
+.footer__copy {
+  @extend %label-md;
+  color: var(--on-surface-variant);
+  font-style: italic;
+}
+
+.footer__legal {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.footer__link--legal {
+  font-size: 12px;
+}
+</style>

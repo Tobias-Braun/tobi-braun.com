@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content'
+import Base from '../../../layouts/Base.astro'
+import BlogListing from '../../../components/blog/BlogListing.vue'
+import { getUi, type Locale } from '../../../utils/locale'
+
+export async function getStaticPaths() {
+  return [
+    { params: { locale: 'de' } },
+    { params: { locale: 'en' } },
+  ]
+}
+
+const { locale } = Astro.params as { locale: Locale }
+const ui = getUi(locale)
+
+const all = await getCollection('blog')
+const allPostsSorted = all
+  .sort((a, b) => b.data.date.localeCompare(a.data.date))
+  .map(e => ({ id: e.id, data: e.data }))
+---
+
+<Base title={`${ui.blog.pageTitle} – Tobias Braun`}>
+  <BlogListing client:only="vue" allPosts={allPostsSorted} />
+</Base>

@@ -1,0 +1,74 @@
+// Gradient text utilities.
+// Each variant exposes both a placeholder (for @extend in component styles)
+// and a utility class (for direct use in templates).
+//
+// Browser requirement: -webkit-background-clip: text is supported in all
+// modern browsers, but -webkit-text-fill-color must accompany background-clip
+// so the gradient shows instead of the fallback `color` value.
+
+@mixin gradient-text($from, $to, $angle: 135deg) {
+  background: linear-gradient($angle, $from, $to);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  // Ensures copy is still legible if background-clip: text is unsupported
+  color: $from;
+}
+
+// ── Variants ─────────────────────────────────────────────────────────────────
+
+// Dark espresso-brown into medium warm brown — opens with clear brown character,
+// ends before the color washes out into sand.
+%gradient-text--black-brown {
+  @include gradient-text(#3e2510, #62432a);
+}
+.gradient-text--black-brown {
+  @extend %gradient-text--black-brown;
+}
+
+// Rich mahogany into golden-tan — both stops stay fully saturated, no pale honey.
+%gradient-text--brown {
+  @include gradient-text(#7a4e2a, #a87040);
+}
+.gradient-text--brown {
+  @extend %gradient-text--brown;
+}
+
+// Rich forest into medium sage — opens with visible green, ends well before mist.
+%gradient-text--green {
+  @include gradient-text(#1e4a26, #5e8c64);
+}
+.gradient-text--green {
+  @extend %gradient-text--green;
+}
+
+%gradient-text--black-green {
+  @include gradient-text(#18331d, #296033);
+}
+.gradient-text--black-green {
+  @extend %gradient-text--black-green;
+}
+
+// Warm caramel into golden amber — no pale cream at either end.
+%gradient-text--sand {
+  @include gradient-text(#8a6440, #b88a58);
+}
+.gradient-text--sand {
+  @extend %gradient-text--sand;
+}
+
+// Mossy forest into medium sage — softer green for labels and decorative text.
+%gradient-text--sage {
+  @include gradient-text(#3a5e40, #6e9c74);
+}
+.gradient-text--sage {
+  @extend %gradient-text--sage;
+}
+
+// Burnt terracotta into warm rust — both stops clearly terracotta, ends before peach.
+%gradient-text--terra {
+  @include gradient-text(#8a3818, #c06038);
+}
+.gradient-text--terra {
+  @extend %gradient-text--terra;
+}

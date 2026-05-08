@@ -1,0 +1,267 @@
+---
+import { getCollection } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+import HeroParticles from '../../components/hero/HeroParticles.vue'
+import ArticleCard from '../../components/blog/ArticleCard.vue'
+import { getUi, type Locale } from '../../utils/locale'
+
+export async function getStaticPaths() {
+  return [
+    { params: { locale: 'de' } },
+    { params: { locale: 'en' } },
+  ]
+}
+
+const { locale } = Astro.params as { locale: Locale }
+const ui = getUi(locale)
+const urlPrefix = `/${locale}`
+
+const all = await getCollection('blog')
+const latestPosts = all
+  .filter(p => p.data.lang === locale)
+  .sort((a, b) => b.data.date.localeCompare(a.data.date))
+  .slice(0, 3)
+---
+
+<Base title="Tobias Braun">
+  <div class="home">
+    <section class="hero">
+      <span class="hero__blob" aria-hidden="true" />
+      <HeroParticles client:load />
+      <div class="hero__portrait">
+        <img src="/main-hero.jpg" alt={ui.home.portraitAlt} />
+      </div>
+      <h1 class="hero__title">
+        {ui.home.heroBefore}<span class="gradient-text--terra">Tobi</span>{ui.home.heroAfter}
+      </h1>
+      <p class="hero__lead">{ui.home.heroLead}</p>
+      <a href={`${urlPrefix}/about`} class="hero__cta">{ui.home.heroCta}</a>
+    </section>
+
+    <section class="intro">
+      <h2 class="intro__title">
+        <span class="gradient-text--black-brown">{ui.home.introWord1}</span>
+        &amp;
+        <span class="gradient-text--black-green">{ui.home.introWord2}</span>
+        {ui.home.introConnector}
+      </h2>
+      <p class="intro__lead">{ui.home.introLead}</p>
+    </section>
+
+    <section class="latest">
+      <header class="latest__head">
+        <h2 class="latest__title gradient-text--green">{ui.home.latestTitle}</h2>
+        <a href={`${urlPrefix}/blog`} class="latest__more">
+          {ui.home.latestMore}
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+      </header>
+      <div class="latest__grid">
+        {latestPosts.map(p => (
+          <ArticleCard
+            to={`${urlPrefix}/blog/${p.id.split('/').pop()!.replace(/\.md$/, '')}`}
+            title={p.data.title}
+            description={p.data.description}
+            category={p.data.category}
+            date={p.data.date}
+            readTime={p.data.readTime}
+          />
+        ))}
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script>
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
+
+gsap.from('.hero__blob', { opacity: 0, duration: 2, ease: 'power1.out' })
+
+gsap.from('.hero__portrait', {
+  scale: 0.72, rotation: -10, opacity: 0, duration: 1.2, delay: 0.1, ease: 'back.out(1.6)',
+})
+
+gsap.from('.hero__title', { y: 70, opacity: 0, duration: 0.9, delay: 0.5, ease: 'power4.out' })
+
+gsap.from(['.hero__lead', '.hero__cta'], {
+  y: 30, opacity: 0, duration: 0.75, stagger: 0.18, delay: 0.75, ease: 'power3.out',
+})
+
+gsap.from('.intro__title', {
+  scrollTrigger: { trigger: '.intro', start: 'top 75%' },
+  scale: 0.84, opacity: 0, duration: 1, ease: 'power3.out',
+})
+
+gsap.from('.intro__lead', {
+  scrollTrigger: { trigger: '.intro', start: 'top 72%' },
+  y: 35, opacity: 0, duration: 0.8, delay: 0.2, ease: 'power2.out',
+})
+
+gsap.from('.latest__title', {
+  scrollTrigger: { trigger: '.latest', start: 'top 85%' },
+  x: -50, opacity: 0, duration: 0.7, ease: 'power3.out',
+})
+
+gsap.from('.latest__more', {
+  scrollTrigger: { trigger: '.latest', start: 'top 85%' },
+  x: 50, opacity: 0, duration: 0.7, ease: 'power3.out',
+})
+
+gsap.fromTo(
+  '.latest__grid .card',
+  { y: 30, rotation: 2, opacity: 0 },
+  {
+    y: 0, rotation: 0, opacity: 1, ease: 'power3.out', stagger: 0.15, duration: 0.15,
+    clearProps: 'transform',
+    scrollTrigger: { trigger: '.latest__grid', start: 'top 85%', once: true },
+  },
+)
+</script>
+
+<style lang="scss">
+@use 'abstracts' as *;
+
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  padding-block: var(--space-2xl);
+}
+
+.hero {
+  @include container;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-lg);
+  padding-block: var(--space-xl);
+  isolation: isolate;
+}
+
+.hero__blob {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: min(800px, 80vw);
+  aspect-ratio: 1;
+  background: var(--surface-container-high);
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.hero__portrait {
+  width: clamp(192px, 30vw, 256px);
+  aspect-ratio: 1;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(51, 69, 55, 0.12);
+  margin-bottom: var(--space-md);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.hero__title {
+  @extend %headline-xl;
+  max-width: 56rem;
+  color: var(--on-surface);
+}
+
+.hero__lead {
+  @extend %body-lg;
+  max-width: 42rem;
+  color: var(--on-surface-variant);
+}
+
+.hero__cta {
+  @extend %label-md;
+  margin-top: var(--space-md);
+  padding: 12px 32px;
+  background: radial-gradient(ellipse at 0% 100%, #3d6d46 0%, transparent 70%),
+    radial-gradient(ellipse at 100% 0%, #3d6d46 0%, transparent 70%),
+    var(--primary);
+  color: var(--on-primary);
+  border-radius: var(--radius-lg);
+  text-transform: uppercase;
+  // filter instead of background-color, because gradients cannot be transitioned
+  transition: filter 0.25s ease;
+
+  &:hover {
+    filter: brightness(1.35);
+  }
+}
+
+.intro {
+  @include container;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.intro__title {
+  @extend %headline-xl;
+  // padding-bottom extends the background area so descenders aren't clipped by background-clip: text
+  padding-bottom: 0.15em;
+  color: var(--on-surface);
+}
+
+.intro__lead {
+  @extend %body-lg;
+  max-width: 48rem;
+  color: var(--on-surface-variant);
+}
+
+.latest {
+  @include container;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.latest__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--outline-variant);
+}
+
+.latest__title {
+  @extend %headline-lg;
+  color: var(--on-surface);
+}
+
+.latest__more {
+  @extend %label-md;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--primary);
+  text-transform: uppercase;
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--surface-tint);
+  }
+}
+
+.latest__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-md);
+}
+</style>

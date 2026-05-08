@@ -1,0 +1,43 @@
+---
+interface Props {
+  category: 'Technical' | 'Lifestyle' | 'Work-Life-Balance'
+}
+
+const { category } = Astro.props
+---
+<span class="badge" data-category={category}>{category}</span>
+
+<style lang="scss">
+@use 'abstracts' as *;
+
+.badge {
+  @extend %label-md;
+  display: inline-block;
+  width: fit-content;
+  align-self: flex-start;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+
+  /* Default: surface-variant */
+  background: var(--surface-variant);
+  color: var(--on-surface-variant);
+
+  &[data-category="Technical"] {
+    background: var(--primary-fixed);
+    color: var(--primary);
+  }
+
+  &[data-category="Lifestyle"] {
+    background: var(--tertiary-fixed);
+    color: var(--tertiary);
+  }
+
+  &[data-category="Work-Life-Balance"] {
+    background: var(--secondary-fixed);
+    color: var(--secondary);
+  }
+}
+</style>

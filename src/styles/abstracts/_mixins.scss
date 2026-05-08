@@ -1,0 +1,28 @@
+@mixin md {
+  @media (min-width: 768px) { @content; }
+}
+
+@mixin lg {
+  @media (min-width: 1024px) { @content; }
+}
+
+// Use this mixin wherever a page section needs the standard content width.
+// Width is defined by --container-max (1200px) and --container-pad (24px side gutter).
+// Never set a custom max-width inline — change the token instead.
+@mixin container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+// Soft pill, used for badges, filter buttons, tags
+@mixin pill($bg, $fg) {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
+  background: $bg;
+  color: $fg;
+}

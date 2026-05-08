@@ -1,0 +1,129 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content'
+import Base from '../../../layouts/Base.astro'
+import CategoryBadge from '../../../components/blog/CategoryBadge.astro'
+import Img from '../../../components/content/Img.astro'
+import { getUi, type Locale } from '../../../utils/locale'
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog')
+  return posts.map(post => ({
+    params: {
+      locale: post.data.lang,
+      slug: post.id.split('/').pop()!.replace(/\.md$/, ''),
+    },
+    props: { post },
+  }))
+}
+
+const { locale } = Astro.params as { locale: Locale; slug: string }
+const { post } = Astro.props as { post: CollectionEntry<'blog'> }
+const ui = getUi(locale)
+
+const { Content } = await render(post)
+
+const formatDate = (d: string) =>
+  new Date(d).toLocaleDateString(locale === 'de' ? 'de-DE' : 'en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+  })
+---
+
+<Base title={`${post.data.title} – Tobias Braun`}>
+  <article class="article">
+    <header class="article__head">
+      <CategoryBadge category={post.data.category} />
+      <h1 class="article__title">{post.data.title}</h1>
+      <div class="article__meta">
+        <span>{ui.blog.published} {formatDate(post.data.date)}</span>
+        <span class="article__dot" aria-hidden="true" />
+        <span>{post.data.readTime} {ui.blog.readSuffix}</span>
+      </div>
+    </header>
+
+    {post.data.image && (
+      <figure class="article__hero">
+        <img
+          src={post.data.image}
+          alt={post.data.title}
+          style={`view-transition-name: article-img-${Astro.params.slug}`}
+        />
+      </figure>
+    )}
+
+    <div class="article__body article-content">
+      <Content components={{ img: Img }} />
+    </div>
+  </article>
+</Base>
+
+<style lang="scss">
+@use 'abstracts' as *;
+
+.article {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  padding-block: var(--space-xl);
+}
+
+.article__head {
+  @include container;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  max-width: 56rem;
+}
+
+.article__title {
+  @extend %headline-xl;
+  color: var(--on-surface);
+}
+
+.article__meta {
+  @extend %body-md;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--outline);
+}
+
+.article__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--outline-variant);
+}
+
+.article__hero {
+  width: 100%;
+  max-width: min(80rem, 100% - 2 * var(--container-pad));
+  margin-inline: auto;
+  aspect-ratio: 21 / 9;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--surface-container);
+  box-shadow: var(--shadow-image);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.article__head :global(.badge) {
+  align-self: center;
+}
+
+.article__body {
+  width: 100%;
+  max-width: 860px;
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+</style>
