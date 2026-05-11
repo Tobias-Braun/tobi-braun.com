@@ -11,7 +11,7 @@ translationSlug: claude-code-hooks
 
 ## 1 Introduction
 
-More and more developers are using Claude Code to write production code – not just for prototypes or experiments, but directly in their daily work on real systems. This saves time and makes it possible to tackle complex tasks faster. At the same time, it brings with it an aspect that is easy to overlook: Claude Code works autonomously with real tools. It executes shell commands, creates files, and makes commits – often without you actively confirming each individual step.
+More and more developers are using Claude Code to write code – not just for prototypes or experiments, but directly in their daily work on real systems. This saves time and makes it possible to tackle complex tasks faster. At the same time, it brings with it an aspect that is easy to overlook: Claude Code works autonomously with real tools. It executes shell commands, creates files, and makes commits – often without you actively confirming each individual step.
 
 That is usually exactly what you want – because who wants to click "Allow" every 10 seconds? – but it also means that mistakes with real consequences can happen. For example, a commit message that lists an AI model as a co-author, which may be undesirable in professional contexts. Or even a commit that accidentally contains an API key.
 
@@ -161,7 +161,6 @@ Below you can see the hook in action again. I instructed Claude Code to make a c
 
 ![Demo Hook - Interaction with Claude Code](/articles/claude-code-hooks/demo-model-hook.png)
 
-
 ### Configuration in the Global settings.json
 
 In my global `~/.claude/settings.json`, both hooks are registered for the `Bash` matcher under `PreToolUse`:
@@ -192,7 +191,7 @@ In my global `~/.claude/settings.json`, both hooks are registered for the `Bash`
 
 Since both hooks only become truly active on `git commit` calls, they have no effect on other Bash commands and don't meaningfully slow down normal work.
 
-It is also possible to narrow the matcher further, so that the hook script only runs for specific Bash commands. For example, `"matcher": "Bash(git commit*)"` would only execute hook scripts when the command starts with `git commit`. I'd be cautious here, though, since Claude Code likes to chain multiple commands together (for example: `git add <files> && git commit -m "..."`). I haven't tested this enough yet to be confident that the hook script fires in such a case. In my personal hook scripts, I simply use grep to check whether `git commit` appears anywhere in the command.
+It is also possible to narrow the matcher further, so that the hook script only runs for specific Bash commands. For example, `"matcher": "Bash(git commit*)"` would only execute hook scripts when the command starts with `git commit`. This also works, when Claude Code chains commands, e.g: `git add <files> && git commit -m "...")`.
 
 ## 7 Conclusion
 

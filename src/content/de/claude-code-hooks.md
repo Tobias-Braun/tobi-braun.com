@@ -11,7 +11,7 @@ translationSlug: claude-code-hooks
 
 ## 1 Einleitung
 
-Immer mehr Entwickler:innen setzen Claude Code ein, um Produktions-Code zu schreiben – nicht nur für Prototypen oder Experimente, sondern direkt im Arbeitsalltag für echte Systeme. Das spart Zeit und ermöglicht es, komplexe Aufgaben schneller umzusetzen. Gleichzeitig bringt das einen Aspekt mit sich, der leicht übersehen wird: Claude Code arbeitet autonom mit echten Tools. Es führt Shell-Befehle aus, legt Dateien an und erstellt Commits – oft ohne dass man jeden einzelnen Schritt aktiv bestätigt.
+Immer mehr Entwickler:innen setzen Claude Code ein, um Code zu schreiben – nicht nur für Prototypen oder Experimente, sondern direkt im Arbeitsalltag für echte Systeme. Das spart Zeit und ermöglicht es, komplexe Aufgaben schneller umzusetzen. Gleichzeitig bringt das einen Aspekt mit sich, der leicht übersehen wird: Claude Code arbeitet autonom mit echten Tools. Es führt Shell-Befehle aus, legt Dateien an und erstellt Commits – oft ohne dass man jeden einzelnen Schritt aktiv bestätigt.
 
 Das ist in der Regel genau das, was man möchte - denn wer will schon alle 10 Sekunden auf "Allow" drücken? - aber es bedeutet auch, dass Fehler mit realen Konsequenzen passieren können. Beispielsweise eine Commit-Nachricht, die den Namen eines KI-Modells als Co-Autoren nennt - was in professionellen Kontexten unerwünscht sein kann. Oder sogar einen commit, der versehentlich einen API Key enthält.
 

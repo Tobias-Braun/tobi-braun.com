@@ -2,7 +2,6 @@
 import Base from '../../layouts/Base.astro'
 import TimelineItem from '../../components/about/TimelineItem.vue'
 import { getUi, type Locale } from '../../utils/locale'
-import { experience } from '../../data/experience'
 
 export async function getStaticPaths() {
   return [
@@ -31,7 +30,7 @@ const ui = getUi(locale)
     <section class="timeline" id="contact">
       <h2 class="timeline__title gradient-text--green">{ui.about.timelineTitle}</h2>
       <ul class="timeline__list">
-        {experience.map(entry => (
+        {ui.about.experience.map(entry => (
           <TimelineItem
             title={entry.title}
             period={entry.period}
